@@ -1032,11 +1032,18 @@ public abstract class WheelPicker<V> extends View {
             return customLocale;
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            return getResources().getConfiguration().getLocales().get(0);
+            return getArabicLocale(getResources().getConfiguration().getLocales().get(0));
         } else {
             //noinspection deprecation
-            return getResources().getConfiguration().locale;
+            return getArabicLocale(getResources().getConfiguration().locale);
         }
+    }
+
+    private Locale getArabicLocale(Locale locale)  {
+      Locale value = new Locale("ar","LY")  ;
+      if (locale.getLanguage().equals(value.getLanguage())) {
+          return value ;
+      }else return locale ;
     }
 
     public void setDateHelper(DateHelper dateHelper) {
