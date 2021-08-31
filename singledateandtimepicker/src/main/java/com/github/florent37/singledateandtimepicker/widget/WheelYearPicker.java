@@ -14,6 +14,7 @@ import org.threeten.bp.format.DateTimeFormatter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -88,7 +89,7 @@ public class WheelYearPicker extends WheelPicker<String> {
     }
 
     protected String getFormattedValue(Object value) {
-        return Instant.ofEpochMilli((Long) value).atZone(ZoneId.systemDefault()).toLocalDate().format(dateTimeFormatter);
+        return Instant.ofEpochMilli(((Date) value).getTime()).atZone(ZoneId.systemDefault()).toLocalDate().format(dateTimeFormatter);
     }
 
     public void setOnYearSelectedListener(OnYearSelectedListener onYearSelectedListener) {
