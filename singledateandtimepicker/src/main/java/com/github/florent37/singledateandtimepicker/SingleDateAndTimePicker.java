@@ -396,11 +396,7 @@ public class SingleDateAndTimePicker extends LinearLayout {
         return isAmPm;
     }
 
-    public void setDayFormatter(SimpleDateFormat simpleDateFormat) {
-        if (simpleDateFormat != null) {
-            this.daysPicker.setDayFormatter(simpleDateFormat);
-        }
-    }
+
 
     public Date getMinDate() {
         return minDate;

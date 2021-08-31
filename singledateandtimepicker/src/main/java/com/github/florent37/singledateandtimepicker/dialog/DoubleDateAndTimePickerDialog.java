@@ -263,10 +263,6 @@ public class DoubleDateAndTimePickerDialog extends BaseDialog {
             pickerTab1.selectDate(calendar);
         }
 
-        if (dayFormatter != null) {
-            pickerTab0.setDayFormatter(dayFormatter);
-            pickerTab1.setDayFormatter(dayFormatter);
-        }
 
         if (customLocale != null) {
             pickerTab0.setCustomLocale(customLocale);

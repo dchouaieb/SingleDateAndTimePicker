@@ -148,9 +148,7 @@ public class SingleDateAndTimePickerDialog extends BaseDialog {
 
         picker.setStepSizeMinutes(minutesStep);
 
-        if (dayFormatter != null) {
-            picker.setDayFormatter(dayFormatter);
-        }
+
 
         if (customLocale != null) {
             picker.setCustomLocale(customLocale);

@@ -24,7 +24,7 @@ allprojects {
 
 ext {
     sdk = 28
-    minSdk = 14
+    minSdk = 15
 
     github = 'https://github.com/florent37/SingleDateAndTimePicker'
 
