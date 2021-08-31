@@ -4,18 +4,22 @@ package com.github.florent37.singledateandtimepicker.widget;
 import android.content.Context;
 import android.util.AttributeSet;
 
+import androidx.annotation.NonNull;
+
 import com.github.florent37.singledateandtimepicker.R;
 
-import java.text.SimpleDateFormat;
+import org.threeten.bp.Instant;
+import org.threeten.bp.ZoneId;
+import org.threeten.bp.format.DateTimeFormatter;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
-import androidx.annotation.NonNull;
+import java.util.Locale;
 
 public class WheelYearPicker extends WheelPicker<String> {
 
-    private SimpleDateFormat simpleDateFormat;
+    private DateTimeFormatter dateTimeFormatter;
     protected int minYear;
     protected int maxYear;
 
@@ -31,8 +35,7 @@ public class WheelYearPicker extends WheelPicker<String> {
 
     @Override
     protected void init() {
-        simpleDateFormat = new SimpleDateFormat("yyyy", getCurrentLocale());
-
+        dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy", Locale.ENGLISH).withLocale(getCurrentLocale());
         Calendar instance = Calendar.getInstance();
         instance.setTimeZone(dateHelper.getTimeZone());
         int currentYear = instance.get(Calendar.YEAR);
@@ -74,7 +77,7 @@ public class WheelYearPicker extends WheelPicker<String> {
 
         final Calendar instance = Calendar.getInstance();
         instance.setTimeZone(dateHelper.getTimeZone());
-        instance.set(Calendar.YEAR, minYear-1);
+        instance.set(Calendar.YEAR, minYear - 1);
 
         for (int i = minYear; i <= maxYear; i++) {
             instance.add(Calendar.YEAR, 1);
@@ -85,7 +88,7 @@ public class WheelYearPicker extends WheelPicker<String> {
     }
 
     protected String getFormattedValue(Object value) {
-        return simpleDateFormat.format(value);
+        return Instant.ofEpochMilli((Long) value).atZone(ZoneId.systemDefault()).toLocalDate().format(dateTimeFormatter);
     }
 
     public void setOnYearSelectedListener(OnYearSelectedListener onYearSelectedListener) {
