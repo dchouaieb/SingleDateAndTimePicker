@@ -1,9 +1,17 @@
 package com.github.florent37.singledateandtimepicker.widget;
 
+import static com.github.florent37.singledateandtimepicker.widget.SingleDateAndTimeConstants.DAYS_PADDING;
+
 import android.content.Context;
 import android.util.AttributeSet;
 
+import androidx.annotation.NonNull;
+
 import com.github.florent37.singledateandtimepicker.R;
+
+import org.threeten.bp.Instant;
+import org.threeten.bp.ZoneId;
+import org.threeten.bp.format.DateTimeFormatter;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,15 +20,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import androidx.annotation.NonNull;
-
-import static com.github.florent37.singledateandtimepicker.widget.SingleDateAndTimeConstants.DAYS_PADDING;
-
 public class WheelDayPicker extends WheelPicker<DateWithLabel> {
 
     private static final String DAY_FORMAT_PATTERN = "EEE d MMM";
 
-    private SimpleDateFormat simpleDateFormat;
+    //private SimpleDateFormat simpleDateFormat;
+    private DateTimeFormatter dateTimeFormatter;
     private SimpleDateFormat customDateFormat;
     private int dayCount = DAYS_PADDING;
 
@@ -36,15 +41,16 @@ public class WheelDayPicker extends WheelPicker<DateWithLabel> {
 
     @Override
     protected void init() {
-        simpleDateFormat = new SimpleDateFormat(DAY_FORMAT_PATTERN, getCurrentLocale());
-        simpleDateFormat.setTimeZone(dateHelper.getTimeZone());
+        //   simpleDateFormat = new SimpleDateFormat(DAY_FORMAT_PATTERN, getCurrentLocale());
+        dateTimeFormatter = DateTimeFormatter.ofPattern(DAY_FORMAT_PATTERN, Locale.ENGLISH).withLocale(getCurrentLocale());
     }
 
     @Override
     public void setCustomLocale(Locale customLocale) {
         super.setCustomLocale(customLocale);
-        simpleDateFormat = new SimpleDateFormat(DAY_FORMAT_PATTERN, getCurrentLocale());
-        simpleDateFormat.setTimeZone(dateHelper.getTimeZone());
+        // simpleDateFormat = new SimpleDateFormat(DAY_FORMAT_PATTERN, getCurrentLocale());
+        dateTimeFormatter = DateTimeFormatter.ofPattern(DAY_FORMAT_PATTERN, Locale.ENGLISH).withLocale(getCurrentLocale());
+
     }
 
     @Override
@@ -98,15 +104,10 @@ public class WheelDayPicker extends WheelPicker<DateWithLabel> {
     }
 
     protected String getFormattedValue(Object value) {
-        return getDateFormat().format(value);
+        return Instant.ofEpochMilli(((Date) value).getTime()).atZone(ZoneId.systemDefault()).toLocalDate().format(dateTimeFormatter);
     }
 
-    public WheelDayPicker setDayFormatter(SimpleDateFormat simpleDateFormat) {
-        simpleDateFormat.setTimeZone(dateHelper.getTimeZone());
-        this.customDateFormat = simpleDateFormat;
-        updateAdapter();
-        return this;
-    }
+
 
     public void setOnDaySelectedListener(OnDaySelectedListener onDaySelectedListener) {
         this.onDaySelectedListener = onDaySelectedListener;
@@ -116,12 +117,7 @@ public class WheelDayPicker extends WheelPicker<DateWithLabel> {
         return convertItemToDate(super.getCurrentItemPosition());
     }
 
-    private SimpleDateFormat getDateFormat() {
-        if (customDateFormat != null) {
-            return customDateFormat;
-        }
-        return simpleDateFormat;
-    }
+
 
     private Date convertItemToDate(int itemPosition) {
         Date date;

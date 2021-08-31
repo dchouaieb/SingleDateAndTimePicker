@@ -4,10 +4,14 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 
-import java.text.SimpleDateFormat;
+import org.threeten.bp.Instant;
+import org.threeten.bp.ZoneId;
+import org.threeten.bp.format.DateTimeFormatter;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class WheelMonthPicker extends WheelPicker<String> {
 
@@ -38,7 +42,7 @@ public class WheelMonthPicker extends WheelPicker<String> {
     protected List<String> generateAdapterValues(boolean showOnlyFutureDates) {
         final List<String> monthList = new ArrayList<>();
 
-        final SimpleDateFormat month_date = new SimpleDateFormat(getMonthFormat(), getCurrentLocale());
+        final DateTimeFormatter month_date = DateTimeFormatter.ofPattern(getMonthFormat(), Locale.ENGLISH).withLocale(getCurrentLocale());
         final Calendar cal = Calendar.getInstance(getCurrentLocale());
         cal.setTimeZone(dateHelper.getTimeZone());
         cal.set(Calendar.DAY_OF_MONTH, 1);
@@ -46,9 +50,9 @@ public class WheelMonthPicker extends WheelPicker<String> {
         for (int i = 0; i < 12; i++) {
             cal.set(Calendar.MONTH, i);
             if (displayMonthNumbers) {
-                monthList.add(String.format("%02d", i + 1));
+                monthList.add(String.format(Locale.ENGLISH, "%02d", i + 1));
             } else {
-                monthList.add(month_date.format(cal.getTime()));
+                monthList.add(Instant.ofEpochMilli(cal.getTime().getTime()).atZone(ZoneId.systemDefault()).toLocalDate().format(month_date));
             }
         }
 
@@ -96,20 +100,15 @@ public class WheelMonthPicker extends WheelPicker<String> {
         void onMonthSelected(WheelMonthPicker picker, int monthIndex, String monthName);
     }
 
-    public void setMonthFormat(String format)
-    {
+    public void setMonthFormat(String format) {
         this.monthFormat = format;
     }
 
-    public String getMonthFormat()
-    {
-       if(TextUtils.isEmpty(this.monthFormat))
-       {
-           return MONTH_FORMAT;
-       }
-       else
-       {
-           return this.monthFormat;
-       }
+    public String getMonthFormat() {
+        if (TextUtils.isEmpty(this.monthFormat)) {
+            return MONTH_FORMAT;
+        } else {
+            return this.monthFormat;
+        }
     }
 }
